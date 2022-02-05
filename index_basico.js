@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded',function(){
         removeBtn.onclick = function(e){
           removeTodo(row.getAttribute('id'));
         }
+        //en la tabla añadimos en la tercera columna al boton de borar
         row.children[3].appendChild(removeBtn);
          
 
