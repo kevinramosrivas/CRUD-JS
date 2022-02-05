@@ -28,4 +28,18 @@ export default class Model{
         //con ... hacemos una copia del objeto para mandarlo a la vista
         return {...todo};
     }
+    findTodo(id){
+        return this.todos.findIndex((todo)=>todo.id === id);
+    }
+    removeTodo(id){
+        //con esto eliminamos ese indice del array
+        const index = this.findTodo(id);
+        this.todos.splice(index, 1);
+    }
+    toggleCompleted (id){
+        const index = this.findTodo(id);
+        const todo = this.todos[index];
+        todo.completed =! todo.completed;
+        console.log(this.todos);
+    }
 }
