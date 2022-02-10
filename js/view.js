@@ -1,5 +1,7 @@
 import AddTodo from './components/add-todo.js';
 import Modal from './components/modal.js';
+import Filters from './components/filters.js';
+
 export default class View{
     constructor(){
         this.model = null;
@@ -7,6 +9,7 @@ export default class View{
 
         this.addTodoForm = new AddTodo();
         this.modal  = new Modal();
+        this.filters = new Filters();
         //pasamos el addtodo como funcion flecha ya que si simplemente ponemos this addTodo se
         //va a confundir por eso lo hacemos asi, una funcion que recibe el titulo y la description
         // y invocamos a la funcion addTodo
@@ -15,6 +18,7 @@ export default class View{
         // de los parentesis se la pase a callback y esta callback como le pasamos la addTodo
         // nos manda los datos al modelo
         this.modal.onClick((id,values) => this.editTodo(id,values));
+        this.filters.onClick((filters) => this.filter(filters));
     }
     setModel(model){
         this.model = model;
@@ -22,6 +26,35 @@ export default class View{
     render(){
         const todos = this.model.getTodos();
         todos.forEach((todo) => this.createRow(todo));
+    }
+
+    filter(filters){
+        const { type,words} = filters;
+        const [,...rows] = this.table.getElementsByTagName('tr');
+        for(const row of rows){
+            const [title,description,completed] = row.children;
+            let shouldHide = false;
+
+            if(words){
+                shouldHide = !title.innerText.includes(words) && !description.innerText.includes(words);
+            }
+
+
+            const shouldBeCompleted = type === 'completed';
+            const isCompleted = completed.children[0].checked;
+
+            if(type !== 'all' && shouldBeCompleted !== isCompleted){
+                shouldHide = true;
+            }
+
+            if(shouldHide){
+                row.classList.add('d-none');
+            }
+            else{
+                row.classList.remove('d-none');
+            }
+            console.log(row,shouldHide);
+        }
     }
     addTodo(title, description){
         const todo = this.model.addTodo(title, description);
